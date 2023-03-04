@@ -8,6 +8,10 @@ class urlController {
     async shortUrlMaker(req, res) {
         const orginUrl = req.body.orginUrl;
         try {
+            // 確認該網址是否存在
+            const urlStatus = await urlFeature.orginUrlStatus(orginUrl);
+            if (!urlStatus)
+                throw new Error('網址錯誤');
             // 確認該網址是否縮址過
             const result = await urlFeature.orginUrlCheck(orginUrl);
             console.log(result);
@@ -31,6 +35,18 @@ class urlController {
         }
         catch (err) {
             console.log(err);
+        }
+    }
+    async hrefSwtich(req, res) {
+        const shortUrl = req.params.shortUrl;
+        const result = await Url.find({ shortUrl });
+        // 重新導向原始網址
+        if (!result.length) {
+            res.redirect('/');
+        }
+        else {
+            const orginUrl = result[0].orginUrl;
+            res.redirect(orginUrl);
         }
     }
 }
