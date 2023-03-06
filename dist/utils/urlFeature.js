@@ -17,12 +17,12 @@ class urlFeature {
             return false;
         }
     }
-    static orginUrlCheck(orginUrl) {
-        const result = Url.find({ orginUrl });
+    static async orginUrlCheck(orginUrl) {
+        const result = await Url.find({ orginUrl });
         return result;
     }
-    static shortUrlCheck(shortUrl) {
-        const result = Url.find({ shortUrl });
+    static async shortUrlCheck(shortUrl) {
+        const result = await Url.find({ shortUrl });
         return result;
     }
 }

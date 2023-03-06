@@ -1,7 +1,7 @@
 import Url from '../Models/urlModel.js';
 
 class urlFeature{
-  static async orginUrlStatus(orginUrl : string){
+  static async orginUrlStatus(orginUrl : string) : Promise<boolean>{
     try{
       const response = await fetch(orginUrl,{
         credentials: 'include',
@@ -17,12 +17,12 @@ class urlFeature{
       return false;
     }
   }
-  static orginUrlCheck(orginUrl : string) : any{
-    const result = Url.find({ orginUrl });
+  static async orginUrlCheck(orginUrl : string) : Promise<any>{
+    const result = await Url.find({ orginUrl });
     return result;
   }
-  static shortUrlCheck(shortUrl : string) : any{
-    const result = Url.find({ shortUrl });
+  static async shortUrlCheck(shortUrl : string) : Promise<any>{
+    const result = await Url.find({ shortUrl });
     return result;
   }
 }
