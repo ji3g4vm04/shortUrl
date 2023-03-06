@@ -8,7 +8,6 @@ class urlController{
     res.render('index');
   }
   async shortUrlMaker(req : Request, res : Response){
-    console.log(req.body);
     const orginUrl : string = req.body.orginUrl;
     try{
       // 確認該網址是否存在
@@ -24,10 +23,8 @@ class urlController{
         throw new Error(error)
       }
       // 確認該網址是否縮址過
-      const result = await urlFeature.orginUrlCheck(orginUrl);
-      console.log(result)
-      if(result.length){
-        console.log('checked')
+      const result = await urlFeature.orginUrl(orginUrl);
+      if(result){
         res.status(200).json({
           result,
           message: 'repeat url',
@@ -35,11 +32,11 @@ class urlController{
         })
       }else{
         const shortUrl = await createShort();
-        const newUrl = await Url.create({orginUrl,shortUrl});
-        if(!newUrl) throw newUrl;
+        const result = await Url.create({orginUrl,shortUrl});
+        if(!result) throw 'Error';
         res.status(200).json({
           status: 'success',
-          newUrl,
+          result,
           message: 'successful treatment'
         })
       }
