@@ -8,6 +8,10 @@ class urlController{
     const urls = await Url.find().lean();
     res.render('index',{ urls });
   }
+  async urls(req : Request, res : Response){
+    const urls = await Url.find();
+    res.status(200).json(urls);
+  }
   async shortUrlMaker(req : Request, res : Response){
     const orginUrl : string = req.body.orginUrl;
     try{
@@ -51,12 +55,12 @@ class urlController{
   }
   async hrefSwtich(req : Request, res : Response){
     const shortUrl : string = req.params.shortUrl;
-    const result : any[] = await Url.find({ shortUrl });
+    const result : any  = await urlFeature.shortUrl(shortUrl);
     // 重新導向原始網址
-    if(!result.length){
+    if(!result){
       res.redirect('/');
     }else{
-      const orginUrl : string = result[0].orginUrl;
+      const orginUrl : string = result.orginUrl;
       res.redirect(orginUrl)
     }
   }

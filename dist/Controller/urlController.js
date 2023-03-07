@@ -6,6 +6,10 @@ class urlController {
         const urls = await Url.find().lean();
         res.render('index', { urls });
     }
+    async urls(req, res) {
+        const urls = await Url.find();
+        res.status(200).json(urls);
+    }
     async shortUrlMaker(req, res) {
         const orginUrl = req.body.orginUrl;
         try {
@@ -52,13 +56,13 @@ class urlController {
     }
     async hrefSwtich(req, res) {
         const shortUrl = req.params.shortUrl;
-        const result = await Url.find({ shortUrl });
+        const result = await urlFeature.shortUrl(shortUrl);
         // 重新導向原始網址
-        if (!result.length) {
+        if (!result) {
             res.redirect('/');
         }
         else {
-            const orginUrl = result[0].orginUrl;
+            const orginUrl = result.orginUrl;
             res.redirect(orginUrl);
         }
     }

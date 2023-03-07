@@ -2,10 +2,13 @@ const form = document.querySelector(".form");
 const modalBody = document.querySelector(".modal-body");
 const urlHistory = document.querySelector(".urlHistory");
 const urlAddress = "http://127.0.0.1:3000/";
+const modal = document.querySelector(".modal");
 
 const formSubmit = async (e) => {
   e.preventDefault();
+  modalBody.innerHTML = null;
   let orginUrl = form.elements.orgin_url.value.trim();
+  // 空白偵測
   if (!orginUrl) {
     alert("網址不可為空");
     return;
@@ -22,12 +25,10 @@ const formSubmit = async (e) => {
     credentials: "same-origin",
   });
   let resultUrl = await response.json();
-  console.log(resultUrl);
   modalBodyContent(resultUrl);
 };
 
 const modalBodyContent = (response) => {
-  modalBody.innerHTML = "...";
   if (response.status === "fail") {
     modalBody.innerHTML = response.message;
   } else {
@@ -49,12 +50,14 @@ const modalBodyContent = (response) => {
         點擊網址即可複製
       </p>
     `;
-    document.querySelector(".copy").addEventListener("click", copyUrl);
+    // document.querySelector(".copy").addEventListener("click", copyUrl);
   }
 };
 
+// 下面兩組function 可以合併使用但目前沒想法ＱＱ
 const copyUrl = async (e) => {
   e.preventDefault();
+  if (!e.target.matches(".copy")) return;
   const short = document.querySelector(".copy").textContent.trim();
   try {
     await navigator.clipboard.writeText(short);
@@ -79,3 +82,4 @@ const hsitoryCopy = async (e) => {
 
 form.addEventListener("submit", formSubmit);
 urlHistory.addEventListener("click", hsitoryCopy);
+modal.addEventListener("click", copyUrl);
