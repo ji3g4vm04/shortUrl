@@ -7,7 +7,6 @@ class urlFeature {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
-            console.log(response.status);
             if (response.status === 404) {
                 throw 'error';
             }
@@ -17,12 +16,12 @@ class urlFeature {
             return false;
         }
     }
-    static async orginUrlCheck(orginUrl) {
-        const result = await Url.find({ orginUrl });
+    static async orginUrl(orginUrl) {
+        const result = await Url.findOne({ orginUrl });
         return result;
     }
-    static async shortUrlCheck(shortUrl) {
-        const result = await Url.find({ shortUrl });
+    static async shortUrl(shortUrl) {
+        const result = await Url.findOne({ shortUrl });
         return result;
     }
 }
