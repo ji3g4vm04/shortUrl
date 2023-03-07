@@ -5,9 +5,12 @@ const urlAddress = "http://127.0.0.1:3000/";
 
 const formSubmit = async (e) => {
   e.preventDefault();
-  const API = "http://127.0.0.1:3000/";
-  let orginUrl = form.elements.orgin_url.value;
-  let response = await fetch(API, {
+  let orginUrl = form.elements.orgin_url.value.trim();
+  if (!orginUrl) {
+    alert("網址不可為空");
+    return;
+  }
+  let response = await fetch(urlAddress, {
     method: "POST",
     body: JSON.stringify({
       orginUrl,
@@ -59,15 +62,6 @@ const copyUrl = async (e) => {
   } catch (error) {
     console.log(error);
   }
-
-  // const copy = document.querySelector(".copy");
-  // const range = document.createRange();
-  // range.selectNode(copy);
-  // const selection = window.getSelection();
-  // selection.removeAllRanges();
-  // selection.addRange(range);
-  // document.execCommand("copy");
-  // selection.removeAllRanges();
 };
 
 const hsitoryCopy = async (e) => {
