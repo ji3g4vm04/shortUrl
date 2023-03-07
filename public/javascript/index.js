@@ -1,8 +1,22 @@
 const form = document.querySelector(".form");
 const modalBody = document.querySelector(".modal-body");
-const urlHistory = document.querySelector(".urlHistory");
+const urlRecord = document.querySelector(".urlRecord");
 const urlAddress = "http://127.0.0.1:3000/";
 const modal = document.querySelector(".modal");
+
+const fetchUtils = async (method, body = null, route = "") => {
+  const API = urlAddress + route;
+  let response = await fetch(API, {
+    method,
+    body,
+    headers: {
+      "content-type": "application/json",
+      Accept: "application/json",
+    },
+    credentials: "same-origin",
+  });
+  return response;
+};
 
 const formSubmit = async (e) => {
   e.preventDefault();
@@ -13,19 +27,38 @@ const formSubmit = async (e) => {
     alert("網址不可為空");
     return;
   }
-  let response = await fetch(urlAddress, {
-    method: "POST",
-    body: JSON.stringify({
-      orginUrl,
-    }),
-    headers: {
-      "content-type": "application/json",
-      Accept: "application/json",
-    },
-    credentials: "same-origin",
+  // 發送原始網址
+  const body = JSON.stringify({
+    orginUrl,
   });
+  const response = await fetchUtils("POST", body);
+
+  // 透過json() 瀏覽器才能讀取回傳的資料
   let resultUrl = await response.json();
   modalBodyContent(resultUrl);
+  // 底下紀錄更新
+  await recordGet();
+};
+
+const recordGet = async () => {
+  const response = await fetchUtils("GET", null, "urls");
+  const result = await response.json();
+  recordUpdate(result);
+};
+
+const recordUpdate = (result) => {
+  urlRecord.innerHTML = "";
+  result.forEach((url) => {
+    urlRecord.innerHTML += `
+    <a
+      href="#"
+      class="list-group-item list-group-item-action urlGroup"
+      aria-current="true"
+      data-short="${url.shortUrl}"
+    >
+     ${url.orginUrl}
+    </a>`;
+  });
 };
 
 const modalBodyContent = (response) => {
@@ -33,7 +66,6 @@ const modalBodyContent = (response) => {
     modalBody.innerHTML = response.message;
   } else {
     const result = response.result;
-    console.log(result);
     modalBody.innerHTML = `
       <img
         class="rounded mx-auto d-block mb-3"
@@ -67,7 +99,7 @@ const copyUrl = async (e) => {
   }
 };
 
-const hsitoryCopy = async (e) => {
+const recordCopy = async (e) => {
   e.preventDefault();
   if (e.target.matches(".urlGroup")) {
     const short = e.target.dataset.short;
@@ -81,5 +113,5 @@ const hsitoryCopy = async (e) => {
 };
 
 form.addEventListener("submit", formSubmit);
-urlHistory.addEventListener("click", hsitoryCopy);
+urlRecord.addEventListener("click", recordCopy);
 modal.addEventListener("click", copyUrl);
