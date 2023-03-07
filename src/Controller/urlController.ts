@@ -4,8 +4,9 @@ import urlFeature from "../utils/urlFeature.js";
 import createShort from "../utils/createShort.js";
 
 class urlController{
-  urlRender(req : Request, res : Response){
-    res.render('index');
+  async urlRender(req : Request, res : Response){
+    const urls = await Url.find().lean();
+    res.render('index',{ urls });
   }
   async shortUrlMaker(req : Request, res : Response){
     const orginUrl : string = req.body.orginUrl;
@@ -41,7 +42,7 @@ class urlController{
         })
       }
     }catch(err : any){
-      console.log(err)
+      // 錯誤回傳
       res.status(404).json({
         message: 'Woops! Something went wrong.',
         status: 'fail'

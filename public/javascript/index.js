@@ -1,5 +1,7 @@
 const form = document.querySelector(".form");
 const modalBody = document.querySelector(".modal-body");
+const urlHistory = document.querySelector(".urlHistory");
+const urlAddress = "http://127.0.0.1:3000/";
 
 const formSubmit = async (e) => {
   e.preventDefault();
@@ -22,6 +24,7 @@ const formSubmit = async (e) => {
 };
 
 const modalBodyContent = (response) => {
+  modalBody.innerHTML = "...";
   if (response.status === "fail") {
     modalBody.innerHTML = response.message;
   } else {
@@ -47,16 +50,38 @@ const modalBodyContent = (response) => {
   }
 };
 
-const copyUrl = (e) => {
+const copyUrl = async (e) => {
   e.preventDefault();
-  const copy = document.querySelector(".copy");
-  const range = document.createRange();
-  range.selectNode(copy);
-  const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-  document.execCommand("copy");
-  selection.removeAllRanges();
+  const short = document.querySelector(".copy").textContent.trim();
+  try {
+    await navigator.clipboard.writeText(short);
+    alert("複製成功");
+  } catch (error) {
+    console.log(error);
+  }
+
+  // const copy = document.querySelector(".copy");
+  // const range = document.createRange();
+  // range.selectNode(copy);
+  // const selection = window.getSelection();
+  // selection.removeAllRanges();
+  // selection.addRange(range);
+  // document.execCommand("copy");
+  // selection.removeAllRanges();
+};
+
+const hsitoryCopy = async (e) => {
+  e.preventDefault();
+  if (e.target.matches(".urlGroup")) {
+    const short = e.target.dataset.short;
+    try {
+      await navigator.clipboard.writeText(`${urlAddress}${short}`);
+      alert("複製成功");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 };
 
 form.addEventListener("submit", formSubmit);
+urlHistory.addEventListener("click", hsitoryCopy);

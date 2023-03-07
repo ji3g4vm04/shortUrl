@@ -1,4 +1,4 @@
-<section class="hero d-flex align-items-center urlHeader">
+<section class="hero d-flex align-items-center urlHeader mb-3">
   <div class="container">
     <p class="small-text-hero"><i
         class="icon-localizer text-primary mr-1"
@@ -26,6 +26,24 @@
     </form>
   </div>
 </section>
+<div class="container">
+  <div class="row">
+    <h2>縮網址紀錄</h2>
+    <p class="text-secondary-emphasis text-3">點擊即可複製</p>
+    <div class="list-group urlHistory">
+      {{#each urls}}
+        <a
+          href="#"
+          class="list-group-item list-group-item-action urlGroup"
+          aria-current="true"
+          data-short="{{this.shortUrl}}"
+        >
+          {{this.orginUrl}}
+        </a>
+      {{/each}}
+    </div>
+  </div>
+</div>
 <!-- Modal -->
 <div
   class="modal fade"
