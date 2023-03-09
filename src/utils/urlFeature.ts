@@ -1,10 +1,10 @@
 import Url from '../Models/urlModel.js';
+import fetch from 'node-fetch';
 
 class urlFeature{
   static async orginUrlStatus(orginUrl : string) : Promise<boolean>{
     try{
       const response = await fetch(orginUrl,{
-        credentials: 'include',
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
